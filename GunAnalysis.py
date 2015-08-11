@@ -196,11 +196,9 @@ for i in range(len(A)):
 rifleOne = RifleAnalysis(1, .1, lengths, pressuresOne)
 rifleTwo = RifleAnalysis(1, .1, lengths, pressuresTwo)
 
-timesROne = []
-timesRTwo = []
+
 velocROne = []
 velocRTwo = []
-accel = []
 
 for index in range(len(pressuresOne)):
 	velocROne.append(rifleOne.getVelocity(index))
@@ -208,33 +206,55 @@ for index in range(len(pressuresOne)):
 for index in range(len(pressuresTwo)):
 	velocRTwo.append(rifleTwo.getVelocity(index))
 
-for index in range(len(pressuresOne)):
-	accel.append(rifleOne.getAccelerations(index,velocROne))
+
+## Creating the TrajectoryAnalysis objects 
+tracjectOne = RifleTrajectory(rifleOne.velocityFinal(), 45)
+trajectTwo = RifleTrajectory(rifleTwo.velocityFinal(), 45)
+
+
+## Generates a list of 10 seconds
+times = [i for i in range(101)]
+
+## Creating a loop that will enter the coordinates for the rifles
+xCoordOne = []
+xCoordTwo = []
+yCoordOne = []
+yCoordTwo = []
+
+for index in times:
+	## Adds the coordinates for the first rifle
+	xCoordOne.append(tracjectOne.xCoord(index))
+	yCoordOne.append(tracjectOne.yCoord(index))
+	
+	xCoordTwo.append(trajectTwo.xCoord(index))
+	yCoordTwo.append(trajectTwo.yCoord(index))
+
+
+## Creating a plot that will print the both rifle's trajectory
+plt.subplot(4,2,1)
+plt.plot(xCoordOne,yCoordOne,"b")
+plt.title("Trajectory of Rifle One")
+plt.xlabel("x")
+plt.ylabel("y")
+
+plt.subplot(4,2,2)
+plt.plot(xCoordTwo,yCoordTwo,"r")
+plt.title("Trajectory of Rifle Two")
+plt.xlabel("x")
+plt.ylabel("y")
 
 
 
-timeROne = rifleOne.getBarrelTimes(velocROne)
-#timeRTwo = rifleTwo.getBarrelTimes()
-
-
-
-
-
-print "times \t lenghts \t velocity \t acceleration"
-for index in range(len(velocROne)):
-	print "{0:.4} \t {1:.4} \t {2:.4} \t {3:.4}".format(timeROne[index],lengths[index], velocROne[index],accel[index])
-
-
-
-## Creating a plot that will plot the lengths with the respective pressures for the first rifle
-plt.subplot(2,1,1)
+## Creating graphs for the pressures inside both rifle's barrel 
+plt.subplot(4,1,3)
 plt.plot(lengths, pressuresOne, "b*")
-plt.title("Pressues vs Lengths")
+plt.title("\nPressues vs Lengths")
 plt.ylabel("Pressures of Rifle One")
 
-plt.subplot(2,1,2)
+plt.subplot(4,1,4)
 plt.plot(lengths,pressuresTwo, "ro")
 plt.ylabel("Pressures of Rifle Two")
 plt.xlabel("Lengths of Barrel")
 
+## Plots all of the graphs 
 plt.show()
